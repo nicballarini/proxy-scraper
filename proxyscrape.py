@@ -1,8 +1,10 @@
 import urllib3
 from requests import get
 from lxml import html
+from lxml import etree
 
-def proxy_list():
+
+def capture_https_proxy_list():
     url = 'https://www.us-proxy.org/'
     urllib3.disable_warnings()
     headers = {
@@ -10,29 +12,37 @@ def proxy_list():
                       'Chrome/77.0.3865.90 Safari/537.36'}
     response = get(url, headers=headers, verify=False, timeout=60)
     tree = html.fromstring(response.content)
-    print('Aquiring list of proxies...')
+    # print('Aquiring list of proxies...')
     # ---------------MY STUFF---------------
     # abs xpath ip: /html[1]/body[1]/section[1]/div[1]/div[2]/div[1]/div[2]/div[1]/table[1]/tbody[1]/tr[1]/td[1]
+    # httpsValue = tree.xpath('//table[@id="proxylisttable"]/tbody/tr/td[position()=7 and contains(text(), "yes")]/text()')
 
-    # store cell data to ip & port
-    ip = tree.xpath ('//table[@id="proxylisttable"]/tbody/tr/td[1]/text()')
+    ip = tree.xpath('//table[@id="proxylisttable"]/tbody/tr/td[1]/text()')
     port = tree.xpath('//table[@id="proxylisttable"]/tbody/tr/td[2]/text()')
+    https_value = tree.xpath('//table[@id="proxylisttable"]/tbody/tr/td[7]/text()')
+    # print(httpsValue)
 
-    print('Storing proxy list')
-
+    # print('Storing proxy list')
     proxy_list = []
+    #grab_only_https = []
+    #https_only_proxy_list
+    # print(list(zip(ip, port, httpsValue)))
+    for a, b in zip(ip, port):
+        proxy_list.append(a + ":" + b)
+    # print('Proxy list with http & https')
+    # print(list(zip(proxyList, httpsValue)))
+    # print('cleaning up list, removing http proxies')
+    grab_only_https = [i for i in list(zip(proxy_list, https_value)) if i[1] == "yes"]
+    # print(grabOnlyHttps)
+    https_only_proxy_list = [x[0] for x in grab_only_https]
+    # print('Here\'s your list of https proxies')
+    # print(httpsOnlyProxyList)
 
-    # this combines lists(ip, port) together
-    for a,b in zip(ip, port):
-        proxy_list.append( a + ":" + b)
-        
-    print('Here\'s your list of proxies')
-    print(proxy_list)
+    return https_only_proxy_list
 
-    return proxy_list
 
 def main():
-    proxy_list()
+    print(capture_https_proxy_list())
 
 
 main()
