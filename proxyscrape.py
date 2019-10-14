@@ -33,16 +33,33 @@ def capture_https_proxy_list():
     # print(list(zip(proxyList, httpsValue)))
     # print('cleaning up list, removing http proxies')
     grab_only_https = [i for i in list(zip(proxy_list, https_value)) if i[1] == "yes"]
-    # print(grabOnlyHttps)
-    https_only_proxy_list = [x[0] for x in grab_only_https]
+    #print(len(proxy_list))
+    #print(grab_only_https)
+    formated_https_proxy_list = [x[0] for x in grab_only_https]
+    #print(formated_https_proxy_list)
     # print('Here\'s your list of https proxies')
     # print(httpsOnlyProxyList)
 
-    return https_only_proxy_list
+    return formated_https_proxy_list
+
+
+def outputproxiestofile(proxies):
+
+    try:
+        open('file.txt', 'w').close()
+    except:
+        open("./proxies.txt", "x")
+
+    proxyoutputfile = open("./proxies.txt", "w")
+
+    for proxy in proxies:
+        proxyoutputfile.writelines(proxy)
+        proxyoutputfile.write('\n')
+    proxyoutputfile.close()
 
 
 def main():
-    print(capture_https_proxy_list())
+    outputproxiestofile(capture_https_proxy_list())
 
 
 main()
