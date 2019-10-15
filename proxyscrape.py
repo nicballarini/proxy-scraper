@@ -46,7 +46,7 @@ def capture_https_proxy_list():
 def outputproxiestofile(proxies):
 
     try:
-        open('file.txt', 'w').close()
+        open("./proxies.txt", 'w').close()
     except:
         open("./proxies.txt", "x")
 
