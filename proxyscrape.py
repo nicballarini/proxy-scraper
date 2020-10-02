@@ -12,33 +12,33 @@ def capture_https_proxy_list():
                       'Chrome/77.0.3865.90 Safari/537.36'}
     response = get(url, headers=headers, verify=False, timeout=60)
     tree = html.fromstring(response.content)
-    # print('Aquiring list of proxies...')
-    # ---------------MY STUFF---------------
-    # abs xpath ip: /html[1]/body[1]/section[1]/div[1]/div[2]/div[1]/div[2]/div[1]/table[1]/tbody[1]/tr[1]/td[1]
-    # httpsValue = tree.xpath('//table[@id="proxylisttable"]/tbody/tr/td[position()=7 and contains(text(), "yes")]/text()')
+        # print('Aquiring list of proxies...')
+        # ---------------MY STUFF---------------
+        # abs xpath ip: /html[1]/body[1]/section[1]/div[1]/div[2]/div[1]/div[2]/div[1]/table[1]/tbody[1]/tr[1]/td[1]
+        # httpsValue = tree.xpath('//table[@id="proxylisttable"]/tbody/tr/td[position()=7 and contains(text(), "yes")]/text()')
 
     ip = tree.xpath('//table[@id="proxylisttable"]/tbody/tr/td[1]/text()')
     port = tree.xpath('//table[@id="proxylisttable"]/tbody/tr/td[2]/text()')
     https_value = tree.xpath('//table[@id="proxylisttable"]/tbody/tr/td[7]/text()')
-    # print(httpsValue)
+        # print(httpsValue)
 
-    # print('Storing proxy list')
+        # print('Storing proxy list')
     proxy_list = []
-    #grab_only_https = []
-    #https_only_proxy_list
-    # print(list(zip(ip, port, httpsValue)))
+        #grab_only_https = []
+        #https_only_proxy_list
+        # print(list(zip(ip, port, httpsValue)))
     for a, b in zip(ip, port):
         proxy_list.append(a + ":" + b)
-    # print('Proxy list with http & https')
-    # print(list(zip(proxyList, httpsValue)))
-    # print('cleaning up list, removing http proxies')
+        # print('Proxy list with http & https')
+        # print(list(zip(proxyList, httpsValue)))
+        # print('cleaning up list, removing http proxies')
     grab_only_https = [i for i in list(zip(proxy_list, https_value)) if i[1] == "yes"]
-    #print(len(proxy_list))
-    #print(grab_only_https)
+        #print(len(proxy_list))
+        #print(grab_only_https)
     formated_https_proxy_list = [x[0] for x in grab_only_https]
-    #print(formated_https_proxy_list)
-    # print('Here\'s your list of https proxies')
-    # print(httpsOnlyProxyList)
+        #print(formated_https_proxy_list)
+        # print('Here\'s your list of https proxies')
+        # print(httpsOnlyProxyList)
 
     return formated_https_proxy_list
 
